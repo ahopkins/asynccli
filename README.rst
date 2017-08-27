@@ -5,9 +5,9 @@ asynccli
     :target: https://pypi.python.org/pypi/asynccli
     :alt: Latest PyPI version
 
-.. image:: https://travis-ci.org/ahopkins/asynccli.png
-   :target: https://travis-ci.org/ahopkins/asynccli
-   :alt: Latest Travis CI build status
+.. image:: https://travis-ci.org/ahopkins/asynccli.svg?branch=master
+    :target: https://travis-ci.org/ahopkins/asynccli
+    :alt: Latest Travis CI build status
 
 A CLI framework based on asyncio.
 
