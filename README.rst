@@ -95,9 +95,9 @@ Roadmap
 License
 -------
 
-``MIT <https://github.com/ahopkins/asynccli/blob/master/LICENSE>``_
+`MIT <https://github.com/ahopkins/asynccli/blob/master/LICENSE>`_
 
 Authors
 -------
 
-``asynccli`` was written by ``Adam Hopkins <admhpkns@gmail.com>``_.
+``asynccli`` was written by `Adam Hopkins <admhpkns@gmail.com>`_.
