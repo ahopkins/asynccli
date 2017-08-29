@@ -16,13 +16,13 @@ class CLIMeta(BaseMeta):
         obj = super().__new__(cls, name, bases, attrs)
         obj._meta = type('CLIMeta', (object, ), {
             'command': True,
-            'arguments': obj.__get_arguments(attrs),
+            'arguments': obj._get_arguments(attrs),
             'bases': bases,
         })
         return obj
 
-    def __get_arguments(self, attrs):
-        # print(type(self), attrs)
+    @staticmethod
+    def _get_arguments(attrs):
         return OrderedDict([(argname, arg) for argname, arg in attrs.items() if isinstance(arg, Argument)])
 
 
@@ -31,12 +31,13 @@ class TieredCLIMeta(BaseMeta):
         obj = super().__new__(cls, name, bases, attrs)
         obj._meta = type('TieredCLIMeta', (object, ), {
             'command': False,
-            'subcommands': obj.__get_subcommands(attrs, bases),
+            'subcommands': obj._get_subcommands(attrs, bases),
             'bases': bases,
         })
         return obj
 
-    def __get_subcommands(self, attrs, bases):
+    @staticmethod
+    def _get_subcommands(attrs, bases):
         subcommands = []
         qualnames = [base.__qualname__ for base in bases]
 
@@ -60,7 +61,8 @@ class BaseCLI(object):
         self._parse_args()
 
     def _setup_parser(self):
-        assert False, "_setup_parser not defined"
+        self.parser = None
+        assert self.parser, "_setup_parser not defined"
 
     def _parse_args(self):
         self.parser.parse_args(namespace=self)
@@ -73,7 +75,6 @@ class CLI(BaseCLI, metaclass=CLIMeta):
         for name, arg in self._meta.arguments.items():
             self.parser.add_argument(
                 name,
-                # required=arg.required,
                 type=arg.argtype,
                 help=arg.help_text,
             )

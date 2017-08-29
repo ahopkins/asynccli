@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="asynccli",
-    version="0.1.0",
+    version="0.1.2",
     url="https://github.com/ahopkins/asynccli",
 
     author="Adam Hopkins",
@@ -25,7 +25,6 @@ setuptools.setup(
         'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],

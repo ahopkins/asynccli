@@ -21,6 +21,10 @@ asynccli
     :target: https://www.codacy.com/app/ahopkins/asynccli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ahopkins/asynccli&amp;utm_campaign=Badge_Grade
     :alt: Codacy grade
 
+.. image:: https://api.codacy.com/project/badge/Coverage/b6f3abd70b6a4ead91c4b0bb820e1ddd
+    :target: https://www.codacy.com/app/ahopkins/asynccli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ahopkins/asynccli&amp;utm_campaign=Badge_Coverage
+    :alt: Codacy coverage
+
 A CLI framework based on asyncio.
 
 .. note:: This is still in **active** development. Things will change. For now, the basic framework is operational. If you are interested in helping out, or would like to see any particular features added, let me know.
