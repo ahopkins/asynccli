@@ -16,7 +16,7 @@ A CLI framework based on asyncio.
 Usage
 -----
 
-The simplest usage is to just pass in an `async` function.
+The simplest usage is to just pass in an ``async`` function.
 
 .. code:: python
 
@@ -32,7 +32,7 @@ The simplest usage is to just pass in an `async` function.
         app.run()
 
 
-It can also be instantiated as a class, as long it has a `call` method.
+It can also be instantiated as a class, as long it has a ``call`` method.
 
 .. code:: python
 
@@ -51,14 +51,14 @@ It can also be instantiated as a class, as long it has a `call` method.
         app = asynccli.App(DivisionCalculator)
         app.run()
 
-In the `DivisionCalculator` example above, you would call your script like this:
+In the ``DivisionCalculator`` example above, you would call your script like this:
 
 .. code::
 
     $ /path/to/script.py 2 3
     0.6666666666666666
 
-What if you want to have a tiered CLI with a hierarchy of commands? First, create your command by subclassing `CLI` as above. Then, wrap the whole thing inside of the `TieredCLI` class, and pass that to the `App`.
+What if you want to have a tiered CLI with a hierarchy of commands? First, create your command by subclassing ``CLI`` as above. Then, wrap the whole thing inside of the ``TieredCLI`` class, and pass that to the ``App``.
 
 .. code:: python
 
@@ -82,22 +82,22 @@ Installation
 Requirements
 ------------
 
-Currently it requires Python 3.5 to make use of `async`/`await`. It uses `argparse` under the hood, and therefore has **no dependencies** outside of the standard library.
+Currently it requires Python 3.5 to make use of ``async``/``await``. It uses ``argparse`` under the hood, and therefore has **no dependencies** outside of the standard library.
 
 Roadmap
 -------
 
-- Additional `Argument` types
-- Integration of additional `argparse` features
-- Add `uvloop`
+- Additional ``Argument`` types
+- Integration of additional ``argparse`` features
+- Add ``uvloop``
 - Better support for help documentation
 
 License
 -------
 
-`MIT <https://github.com/ahopkins/asynccli/blob/master/LICENSE>`_
+``MIT <https://github.com/ahopkins/asynccli/blob/master/LICENSE>``_
 
 Authors
 -------
 
-`asynccli` was written by `Adam Hopkins <admhpkns@gmail.com>`_.
+``asynccli`` was written by ``Adam Hopkins <admhpkns@gmail.com>``_.
