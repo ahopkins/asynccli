@@ -2,7 +2,7 @@ import asynccli
 from unittest.mock import patch
 
 
-class Calculator(asynccli.CLI):
+class DivisionCalculator(asynccli.CLI):
     first_num = asynccli.Integer(help_text='This is some help text.')
     second_num = asynccli.Integer()
 
@@ -10,12 +10,32 @@ class Calculator(asynccli.CLI):
         print(self.first_num / self.second_num)
 
 
-def test_calculator(capsys):
-    # sys.argv = ['1', '2']
+class MultiplicationCalculator(asynccli.CLI):
+    first_num = asynccli.Integer(help_text='This is some help text.')
+    second_num = asynccli.Integer()
 
-    with patch('sys.argv', ['', '1', '2']):
+    async def call(self):
+        print(self.first_num * self.second_num)
+
+
+class Calculator(asynccli.TieredCLI):
+    d = DivisionCalculator
+    m = MultiplicationCalculator
+
+
+def test_calculator_with_multiplication(capsys):
+    with patch('sys.argv', ['', 'm', '2', '4']):
         app = asynccli.App(Calculator)
         app.run()
 
     out, err = capsys.readouterr()
-    assert out in ["0.5\n", "2.0\n"]
+    assert out == "8\n"
+
+
+def test_calculator_with_division(capsys):
+    with patch('sys.argv', ['', 'd', '2', '4']):
+        app = asynccli.App(Calculator)
+        app.run()
+
+    out, err = capsys.readouterr()
+    assert out == "0.5\n"

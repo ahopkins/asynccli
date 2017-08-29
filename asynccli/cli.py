@@ -94,7 +94,6 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
         )
 
     async def call(self):
-        print('Called {}'.format(self.command))
         cmd = self._meta.subcommands.get(self.command, None)
 
         if cmd is None:

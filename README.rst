@@ -74,9 +74,17 @@ Installation
     pip install asynccli
 
 Requirements
-^^^^^^^^^^^^
+------------
 
-Currently it requires Python 3.5 to make use of `async`/`await`
+Currently it requires Python 3.5 to make use of `async`/`await`. It uses `argparse` under the hood, and therefore has **no dependencies** outside of the standard library.
+
+Roadmap
+-------
+
+- Additional `Argument` types
+- Integration of additional `argparse` features
+- Add `uvloop`
+- Better support for help documentation
 
 License
 -------
