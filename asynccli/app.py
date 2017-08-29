@@ -1,5 +1,5 @@
 import asyncio
-from .cli import CLI
+from .cli import BaseCLI
 
 
 class App(object):
@@ -16,7 +16,7 @@ class App(object):
         tasks = []
         for task in self.tasks:
             called = task()
-            if isinstance(called, CLI):
+            if isinstance(called, BaseCLI):
                 tasks.append(called.call())
             else:
                 tasks.append(called)

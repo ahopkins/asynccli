@@ -11,7 +11,7 @@ asynccli
 
 A CLI framework based on asyncio.
 
-.. note:: This is still in **active** development. Things will change.
+.. note:: This is still in **active** development. Things will change. For now, the basic framework is operational. If you are interested in helping out, or would like to see any particular features added, let me know.
 
 Usage
 -----
@@ -51,6 +51,23 @@ It can also be instantiated as a class, as long it has a `call` method.
         app = asynccli.App(DivisionCalculator)
         app.run()
 
+In the `DivisionCalculator` example above, you would call your script like this:
+
+    $ /path/to/script.py 2 3
+    0.6666666666666666
+
+What if you want to have a tiered CLI with a hierarchy of commands? First, create your command by subclassing `CLI` as above. Then, wrap the whole thing inside of the `TieredCLI` class, and pass that to the `App`.
+
+.. code:: python
+
+    class Calculator(asynccli.TieredCLI):
+        d = DivisionCalculator
+
+Now, to invoke the script, you have an extra argument to call:
+
+    $ /path/to/script.py d 2 3
+    0.6666666666666666
+
 Installation
 ------------
 
@@ -70,4 +87,3 @@ Authors
 -------
 
 `asynccli` was written by `Adam Hopkins <admhpkns@gmail.com>`_.
-.
