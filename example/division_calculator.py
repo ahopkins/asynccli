@@ -6,7 +6,6 @@ class DivisionCalculator(asynccli.CLI):
     second_num = asynccli.Integer()
 
     async def call(self):
-        print(self._meta.subcommands)
         print(self.first_num / self.second_num)
 
 
