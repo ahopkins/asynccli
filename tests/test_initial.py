@@ -1,7 +1,3 @@
-# import asynccli
-import sys
-
-
 def callable():
     print('hello')
     return True
@@ -9,5 +5,5 @@ def callable():
 
 def test_init(capsys):
     assert callable(), "Something wrong"
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert out == "hello\n"

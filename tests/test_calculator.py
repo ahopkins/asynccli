@@ -28,7 +28,7 @@ def test_calculator_with_multiplication(capsys):
         app = asynccli.App(Calculator)
         app.run()
 
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert out == "8\n"
 
 
@@ -37,5 +37,5 @@ def test_calculator_with_division(capsys):
         app = asynccli.App(Calculator)
         app.run()
 
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert out == "0.5\n"

@@ -5,9 +5,21 @@ asynccli
     :target: https://pypi.python.org/pypi/asynccli
     :alt: Latest PyPI version
 
+.. image:: https://img.shields.io/pypi/status/asynccli.svg
+    :target: https://pypi.python.org/pypi/asynccli
+    :alt: Version status
+
+.. image:: https://img.shields.io/pypi/pyversions/asynccli.svg
+    :target: https://pypi.python.org/pypi/asynccli
+    :alt: Python 3.5 and 3.6
+
 .. image:: https://travis-ci.org/ahopkins/asynccli.svg?branch=master
     :target: https://travis-ci.org/ahopkins/asynccli
     :alt: Latest Travis CI build status
+
+.. image:: https://api.codacy.com/project/badge/Grade/b6f3abd70b6a4ead91c4b0bb820e1ddd
+    :target: https://www.codacy.com/app/ahopkins/asynccli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ahopkins/asynccli&amp;utm_campaign=Badge_Grade
+    :alt: Codacy grade
 
 A CLI framework based on asyncio.
 

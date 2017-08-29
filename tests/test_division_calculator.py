@@ -17,5 +17,5 @@ def test_division_calculator(capsys):
         app = asynccli.App(Calculator)
         app.run()
 
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert out == "0.5\n"
