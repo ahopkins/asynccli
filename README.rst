@@ -1,6 +1,10 @@
 asynccli
 ========
 
+.. image:: https://api.codacy.com/project/badge/Grade/b6f3abd70b6a4ead91c4b0bb820e1ddd
+   :alt: Codacy Badge
+   :target: https://www.codacy.com/app/ahopkins/asynccli?utm_source=github.com&utm_medium=referral&utm_content=ahopkins/asynccli&utm_campaign=badger
+
 .. image:: https://img.shields.io/pypi/v/asynccli.svg
     :target: https://pypi.python.org/pypi/asynccli
     :alt: Latest PyPI version
