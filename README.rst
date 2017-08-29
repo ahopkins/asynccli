@@ -53,6 +53,8 @@ It can also be instantiated as a class, as long it has a `call` method.
 
 In the `DivisionCalculator` example above, you would call your script like this:
 
+.. code::
+
     $ /path/to/script.py 2 3
     0.6666666666666666
 
@@ -65,11 +67,15 @@ What if you want to have a tiered CLI with a hierarchy of commands? First, creat
 
 Now, to invoke the script, you have an extra argument to call:
 
+.. code::
+
     $ /path/to/script.py d 2 3
     0.6666666666666666
 
 Installation
 ------------
+
+.. code::
 
     pip install asynccli
 
