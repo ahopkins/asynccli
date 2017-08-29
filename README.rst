@@ -108,6 +108,23 @@ Roadmap
 - Add ``uvloop``
 - Better support for help documentation
 
+Testing
+-------
+
+You can invoke the test scripts a few different ways:
+
+.. code::
+
+    $ py.test
+    $ python setup.py test
+    $ python -m py.test
+
+And, in order to generate the test coverage:
+
+.. code::
+
+    $ coverage run -m py.test
+
 License
 -------
 

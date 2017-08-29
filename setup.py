@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="asynccli",
-    version="0.1.2",
+    version="0.1.3",
     url="https://github.com/ahopkins/asynccli",
 
     author="Adam Hopkins",
@@ -19,7 +19,7 @@ setuptools.setup(
     tests_require=['pytest', ],
 
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'Framework :: AsyncIO',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',

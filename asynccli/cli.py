@@ -64,13 +64,18 @@ class BaseCLI(object):
         self.parser = None
         assert self.parser, "_setup_parser not defined"
 
-    def _parse_args(self):
-        self.parser.parse_args(namespace=self)
-
 
 class CLI(BaseCLI, metaclass=CLIMeta):
+    def __init__(self, parent=None, argname=None, *args, **kwargs):
+        self.parent = parent
+        self.argname = argname
+        super().__init__(*args, **kwargs)
+
     def _setup_parser(self):
-        self.parser = argparse.ArgumentParser()
+        if self.parent:
+            self.parser = self.parent.subparsers.add_parser(self.argname)
+        else:
+            self.parser = argparse.ArgumentParser()
 
         for name, arg in self._meta.arguments.items():
             self.parser.add_argument(
@@ -79,28 +84,54 @@ class CLI(BaseCLI, metaclass=CLIMeta):
                 help=arg.help_text,
             )
 
+    def _parse_args(self):
+        if self.parent is None:
+            self.parser.parse_args(namespace=self)
+        else:
+            for argname, _ in self._meta.arguments.items():
+                # print(argname)
+                argument = getattr(self.parent, argname, None)
+                setattr(self, argname, argument)
+
+
+class Subcommands(object):
+    def __init__(self):
+        self.command_list = []
+
+    def __iter__(self):
+        for command in self.command_list:
+            yield getattr(self, command, None)
+
+    def add(self, name, command):
+        self.command_list.append(name)
+        setattr(self, name, command)
+
 
 class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
+    def __init__(self, *args, **kwargs):
+        # super().__init__(*args, **kwargs)
+        self._setup_parser()
+        self._setup_subcommands()
+        self._parse_args()
+
+    def _setup_subcommands(self):
+        # self.subcommands = type('Subcommands', (object, ), {})
+        self.subcommands = Subcommands()
+
+        for argname, arg in self._meta.subcommands.items():
+            command = arg(parent=self, argname=argname)
+            # setattr(self.subcommands, argname, command)
+            self.subcommands.add(argname, command)
+
     def _setup_parser(self):
         self.parser = argparse.ArgumentParser()
+        self.subparsers = self.parser.add_subparsers(help='Commands', dest='command')
 
-        self.parser.add_argument(
-            'command',
-            type=str,
-        )
-
-        self.parser.add_argument(
-            'arguments',
-            nargs='+',
-        )
+    def _parse_args(self):
+        self.parser.parse_args(namespace=self)
+        for subcommand in self.subcommands:
+            subcommand._parse_args()
 
     async def call(self):
-        cmd = self._meta.subcommands.get(self.command, None)
-
-        if cmd is None:
-            raise Exception('Could not find command {}'.format(self.command))
-
-        del sys.argv[1]
-
-        command = cmd()
+        command = getattr(self.subcommands, self.command)
         await command.call()
