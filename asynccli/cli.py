@@ -1,8 +1,8 @@
-from .arguments import Argument
 import argparse
-import sys
+
+from .arguments import Argument
+from .commands import Subcommands
 from collections import OrderedDict
-# from pprint import pprint
 
 
 class BaseMeta(type):
@@ -56,20 +56,13 @@ class TieredCLIMeta(BaseMeta):
 class BaseCLI(object):
     __slots__ = ('_meta', 'call')
 
-    def __init__(self):
-        self._setup_parser()
-        self._parse_args()
-
-    def _setup_parser(self):
-        self.parser = None
-        assert self.parser, "_setup_parser not defined"
-
 
 class CLI(BaseCLI, metaclass=CLIMeta):
     def __init__(self, parent=None, argname=None, *args, **kwargs):
         self.parent = parent
         self.argname = argname
-        super().__init__(*args, **kwargs)
+        self._setup_parser()
+        self._parse_args()
 
     def _setup_parser(self):
         if self.parent:
@@ -94,33 +87,17 @@ class CLI(BaseCLI, metaclass=CLIMeta):
                 setattr(self, argname, argument)
 
 
-class Subcommands(object):
-    def __init__(self):
-        self.command_list = []
-
-    def __iter__(self):
-        for command in self.command_list:
-            yield getattr(self, command, None)
-
-    def add(self, name, command):
-        self.command_list.append(name)
-        setattr(self, name, command)
-
-
 class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
     def __init__(self, *args, **kwargs):
-        # super().__init__(*args, **kwargs)
         self._setup_parser()
         self._setup_subcommands()
         self._parse_args()
 
     def _setup_subcommands(self):
-        # self.subcommands = type('Subcommands', (object, ), {})
         self.subcommands = Subcommands()
 
         for argname, arg in self._meta.subcommands.items():
             command = arg(parent=self, argname=argname)
-            # setattr(self.subcommands, argname, command)
             self.subcommands.add(argname, command)
 
     def _setup_parser(self):
