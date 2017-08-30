@@ -81,6 +81,10 @@ What if you want to have a tiered CLI with a hierarchy of commands? First, creat
     class Calculator(asynccli.TieredCLI):
         d = DivisionCalculator
 
+    if __name__ == '__main__':
+        app = asynccli.App(Calculator)
+        app.run()
+
 Now, to invoke the script, you have an extra argument to call:
 
 .. code::
