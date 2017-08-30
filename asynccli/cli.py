@@ -7,13 +7,13 @@ from collections import OrderedDict
 
 class BaseMeta(type):
     @classmethod
-    def __prepare__(mcls, cls, bases):
+    def __prepare__(mcs, cls, bases):
         return OrderedDict()
 
 
 class CLIMeta(BaseMeta):
-    def __new__(cls, name, bases, attrs):
-        obj = super().__new__(cls, name, bases, attrs)
+    def __new__(mcs, name, bases, attrs):
+        obj = super().__new__(mcs, name, bases, attrs)
         obj._meta = type('CLIMeta', (object, ), {
             'command': True,
             'arguments': obj._get_arguments(attrs),
@@ -23,12 +23,16 @@ class CLIMeta(BaseMeta):
 
     @staticmethod
     def _get_arguments(attrs):
-        return OrderedDict([(argname, arg) for argname, arg in attrs.items() if isinstance(arg, Argument)])
+        args = [
+            (argname, arg) for argname, arg in attrs.items()
+            if isinstance(arg, Argument)
+        ]
+        return OrderedDict(args)
 
 
 class TieredCLIMeta(BaseMeta):
-    def __new__(cls, name, bases, attrs):
-        obj = super().__new__(cls, name, bases, attrs)
+    def __new__(mcs, name, bases, attrs):
+        obj = super().__new__(mcs, name, bases, attrs)
         obj._meta = type('TieredCLIMeta', (object, ), {
             'command': False,
             'subcommands': obj._get_subcommands(attrs, bases),
@@ -102,7 +106,10 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
 
     def _setup_parser(self):
         self.parser = argparse.ArgumentParser()
-        self.subparsers = self.parser.add_subparsers(help='Commands', dest='command')
+        self.subparsers = self.parser.add_subparsers(
+            help='Commands',
+            dest='command'
+        )
 
     def _parse_args(self):
         self.parser.parse_args(namespace=self)
