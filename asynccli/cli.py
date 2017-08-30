@@ -78,7 +78,7 @@ class CLI(BaseCLI, metaclass=CLIMeta):
             self.parser.add_argument(
                 name,
                 type=arg.argtype,
-                help=arg.help_text,
+                help=arg.help,
             )
 
     def _parse_args(self):
