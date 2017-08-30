@@ -1,19 +1,19 @@
-from .arguments import Argument
 import argparse
-import sys
+
+from .arguments import Argument
+from .commands import Subcommands
 from collections import OrderedDict
-# from pprint import pprint
 
 
 class BaseMeta(type):
     @classmethod
-    def __prepare__(mcls, cls, bases):
+    def __prepare__(mcs, cls, bases):
         return OrderedDict()
 
 
 class CLIMeta(BaseMeta):
-    def __new__(cls, name, bases, attrs):
-        obj = super().__new__(cls, name, bases, attrs)
+    def __new__(mcs, name, bases, attrs):
+        obj = super().__new__(mcs, name, bases, attrs)
         obj._meta = type('CLIMeta', (object, ), {
             'command': True,
             'arguments': obj._get_arguments(attrs),
@@ -23,12 +23,16 @@ class CLIMeta(BaseMeta):
 
     @staticmethod
     def _get_arguments(attrs):
-        return OrderedDict([(argname, arg) for argname, arg in attrs.items() if isinstance(arg, Argument)])
+        args = [
+            (argname, arg) for argname, arg in attrs.items()
+            if isinstance(arg, Argument)
+        ]
+        return OrderedDict(args)
 
 
 class TieredCLIMeta(BaseMeta):
-    def __new__(cls, name, bases, attrs):
-        obj = super().__new__(cls, name, bases, attrs)
+    def __new__(mcs, name, bases, attrs):
+        obj = super().__new__(mcs, name, bases, attrs)
         obj._meta = type('TieredCLIMeta', (object, ), {
             'command': False,
             'subcommands': obj._get_subcommands(attrs, bases),
@@ -56,21 +60,19 @@ class TieredCLIMeta(BaseMeta):
 class BaseCLI(object):
     __slots__ = ('_meta', 'call')
 
-    def __init__(self):
+
+class CLI(BaseCLI, metaclass=CLIMeta):
+    def __init__(self, parent=None, argname=None, *args, **kwargs):
+        self.parent = parent
+        self.argname = argname
         self._setup_parser()
         self._parse_args()
 
     def _setup_parser(self):
-        self.parser = None
-        assert self.parser, "_setup_parser not defined"
-
-    def _parse_args(self):
-        self.parser.parse_args(namespace=self)
-
-
-class CLI(BaseCLI, metaclass=CLIMeta):
-    def _setup_parser(self):
-        self.parser = argparse.ArgumentParser()
+        if self.parent:
+            self.parser = self.parent.subparsers.add_parser(self.argname)
+        else:
+            self.parser = argparse.ArgumentParser()
 
         for name, arg in self._meta.arguments.items():
             self.parser.add_argument(
@@ -79,28 +81,41 @@ class CLI(BaseCLI, metaclass=CLIMeta):
                 help=arg.help_text,
             )
 
+    def _parse_args(self):
+        if self.parent is None:
+            self.parser.parse_args(namespace=self)
+        else:
+            for argname, _ in self._meta.arguments.items():
+                # print(argname)
+                argument = getattr(self.parent, argname, None)
+                setattr(self, argname, argument)
+
 
 class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
+    def __init__(self, *args, **kwargs):
+        self._setup_parser()
+        self._setup_subcommands()
+        self._parse_args()
+
+    def _setup_subcommands(self):
+        self.subcommands = Subcommands()
+
+        for argname, arg in self._meta.subcommands.items():
+            command = arg(parent=self, argname=argname)
+            self.subcommands.add(argname, command)
+
     def _setup_parser(self):
         self.parser = argparse.ArgumentParser()
-
-        self.parser.add_argument(
-            'command',
-            type=str,
+        self.subparsers = self.parser.add_subparsers(
+            help='Commands',
+            dest='command'
         )
 
-        self.parser.add_argument(
-            'arguments',
-            nargs='+',
-        )
+    def _parse_args(self):
+        self.parser.parse_args(namespace=self)
+        for subcommand in self.subcommands:
+            subcommand._parse_args()
 
     async def call(self):
-        cmd = self._meta.subcommands.get(self.command, None)
-
-        if cmd is None:
-            raise Exception('Could not find command {}'.format(self.command))
-
-        del sys.argv[1]
-
-        command = cmd()
+        command = getattr(self.subcommands, self.command)
         await command.call()

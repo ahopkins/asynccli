@@ -81,6 +81,10 @@ What if you want to have a tiered CLI with a hierarchy of commands? First, creat
     class Calculator(asynccli.TieredCLI):
         d = DivisionCalculator
 
+    if __name__ == '__main__':
+        app = asynccli.App(Calculator)
+        app.run()
+
 Now, to invoke the script, you have an extra argument to call:
 
 .. code::
@@ -107,6 +111,23 @@ Roadmap
 - Integration of additional ``argparse`` features
 - Add ``uvloop``
 - Better support for help documentation
+
+Testing
+-------
+
+You can invoke the test scripts a few different ways:
+
+.. code::
+
+    $ py.test
+    $ python setup.py test
+    $ python -m py.test
+
+And, in order to generate the test coverage:
+
+.. code::
+
+    $ coverage run -m py.test
 
 License
 -------
