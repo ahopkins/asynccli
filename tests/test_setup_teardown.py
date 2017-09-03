@@ -3,15 +3,15 @@ import asyncio
 
 
 class MyCLI(asynccli.CLI):
-    async def setup(self):
+    async def setup(self, args):
         print('setup')
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.1)
 
-    async def teardown(self):
+    async def teardown(self, args):
         print('teardown')
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.1)
 
-    async def call(self):
+    async def call(self, args):
         print("Hello, world.")
 
 

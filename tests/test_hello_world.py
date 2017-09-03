@@ -6,7 +6,7 @@ async def mycli():
 
 
 class MyCLI(asynccli.CLI):
-    async def call(self):
+    async def call(self, args):
         print("Hello, world.")
 
 
