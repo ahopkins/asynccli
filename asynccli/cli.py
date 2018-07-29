@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import signal
+from inspect import getargspec
 
 from .arguments import Argument, Arguments
 from .commands import Subcommands
@@ -66,6 +67,10 @@ class BaseCLI(object):
 
     def __init__(self, app=None, *args, **kwargs):
         self.app = app
+
+    @staticmethod
+    def help():
+        return ''
     #     signal.signal(signal.SIGINT, self.exit_gracefully)
     #     signal.signal(signal.SIGTERM, self.exit_gracefully)
     #     self.running = True
@@ -96,8 +101,9 @@ class BaseCLI(object):
 
 
 class CLI(BaseCLI, metaclass=CLIMeta):
-    def __init__(self, parent=None, argname=None, *args, **kwargs):
+    def __init__(self, app=None, parent=None, argname=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.app = app
         self.parent = parent
         self.argname = argname
         self._setup_parser()
@@ -142,8 +148,9 @@ class CLI(BaseCLI, metaclass=CLIMeta):
 
 
 class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
-    def __init__(self, parent=None, argname=None, *args, **kwargs):
+    def __init__(self, app=None, parent=None, argname=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.app = app
         self.parent = parent
         self.argname = argname
         self._setup_parser()
@@ -160,7 +167,15 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
         if self.argname:
             return '{} Commands'.format(self.argname.title())
         else:
-            return 'Commands'
+            return 'Available Subcommands\n=====================\n{}'.format(self._get_subcommand_help())
+
+    def _get_subcommand_help(self):
+        helps = []
+        # print(self._meta.subcommands)
+        for cmd, subcommand in self._meta.subcommands.items():
+            help = '{}: {}'.format(cmd, subcommand.help())
+            helps.append(help)
+        return '\n'.join(helps)
 
     def _get_parser_name(self):
         if self.argname:
@@ -173,7 +188,7 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
         self.arguments = Arguments()
 
         for argname, command in self._meta.subcommands.items():
-            command = command(parent=self, argname=argname)
+            command = command(app=self.app, parent=self, argname=argname)
 
             if self.parent:
                 self.parent.subcommands.add(argname, command)
@@ -182,7 +197,7 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
 
     def _setup_parser(self):
         if self.parent is None:
-            self.parser = argparse.ArgumentParser()
+            self.parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
         else:
             self.parser = self.parent.subparsers.add_parser(self._get_parser_name())
         self.subparsers = self.parser.add_subparsers(
@@ -207,4 +222,10 @@ class TieredCLI(BaseCLI, metaclass=TieredCLIMeta):
     async def call(self, _):
         if getattr(self.arguments, 'command', None) is not None:
             command = getattr(self.subcommands, self.arguments.command)
+            # arg_def = getargspec(command.call).args
+            # kwarg_def = getargspec(command.call).keywords
+            # num_args = 0 if arg_def is None else len(arg_def)
+            # num_kwargs = 0 if kwarg_def is None else len(kwarg_def)
+
+            # if num_kwargs + num_args > 1:
             await command.call(self.arguments)

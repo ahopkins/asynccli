@@ -55,6 +55,11 @@ class Argument(object):
         prefix = '-' if self.option else ''
         return '{}{}'.format(prefix, name)
 
+    def __get__(self, x, y):
+        print(x)
+        print(y)
+        return self.argtype(self.value)
+
 
 class Integer(Argument):
     __slots__ = ()
